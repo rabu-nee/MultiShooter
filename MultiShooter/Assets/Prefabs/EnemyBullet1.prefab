@@ -23,10 +23,10 @@ GameObject:
   - component: {fileID: 114063605503032946}
   - component: {fileID: 114536658985889964}
   - component: {fileID: 114764366474719288}
-  - component: {fileID: 33113254406215444}
-  - component: {fileID: 23797842156649390}
-  m_Layer: 0
-  m_Name: Bullet
+  - component: {fileID: 33939192632173834}
+  - component: {fileID: 23723901750601146}
+  m_Layer: 12
+  m_Name: EnemyBullet1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40,12 +40,12 @@ Transform:
   m_GameObject: {fileID: 1756628363918102}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.5137499}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &23797842156649390
+--- !u!23 &23723901750601146
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -60,7 +60,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 47b29bcd43fdc5840b8e7f39f0fe0638, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -80,13 +80,13 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &33113254406215444
+--- !u!33 &33939192632173834
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1756628363918102}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!54 &54613826603893742
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -116,22 +116,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 111
-    i1: 243
-    i2: 168
-    i3: 208
-    i4: 2
-    i5: 64
-    i6: 2
-    i7: 20
-    i8: 9
-    i9: 77
-    i10: 98
-    i11: 52
-    i12: 223
-    i13: 22
-    i14: 115
-    i15: 118
+    i0: 69
+    i1: 43
+    i2: 132
+    i3: 23
+    i4: 40
+    i5: 218
+    i6: 83
+    i7: 116
+    i8: 219
+    i9: 88
+    i10: 164
+    i11: 22
+    i12: 68
+    i13: 193
+    i14: 66
+    i15: 215
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!114 &114536658985889964
