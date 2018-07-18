@@ -35,8 +35,8 @@ public class SimpleProjectile : MonoBehaviour {
                 if (damageable != null) {
                     damageable.Damage(damageAmount);
                 }
-                gameObject.SetActive(false);
             }
+            gameObject.SetActive(false);
         }
     }
 }

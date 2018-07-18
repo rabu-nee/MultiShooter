@@ -134,12 +134,11 @@ public class PlayerController : NetworkBehaviour, IDamageable {
     public void Damage(float damageAmount) {
         currenthealth -= damageAmount;
 
-        /*
+        
         if (currenthealth <= 0.0f) {
             enabled = false;
-            boxCollider.gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
-        */
     }
 
 }

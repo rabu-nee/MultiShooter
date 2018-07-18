@@ -4,13 +4,17 @@ using System.Collections.Generic;
 using System;
 using GameEvents;
 using UnityEngine.Networking;
+using UnityEngine.AI;
 
-public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendSeed>{
+public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendSeed> {
 
     public int width;
     public int height;
 
+
     public string seed;
+
+    public NavMeshSurface surface;
 
     [Range(0, 100)]
     public int randomFillPercent;
@@ -18,26 +22,32 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
     int[,] map;
     public Transform[] startingPositions;
 
+    private ObjectPooler objectPooler;
+
     void Start() {
-        //seed = UnityEngine.Random.Range(1, 1000).ToString();
-        //Invoke("GenerateMap", 0.2f);
+        objectPooler = ObjectPooler.Instance;
     }
+
+    /*
+    void Update() {
+        if (Input.GetMouseButtonDown(0)) {
+            seed = UnityEngine.Random.Range(1, 1000).ToString();
+            GenerateMap();
+        }
+    }
+    */
 
     public void OnEnable() {
         this.EventStartListening<GameEvent_SendSeed>();
     }
-
     public void OnDisable() {
         this.EventStopListening<GameEvent_SendSeed>();
     }
-
-
     public void OnGameEvent(GameEvent_SendSeed gameEvent) {
         seed = gameEvent.GetHostSeed();
     }
 
     public void GenerateMap() {
-        Debug.Log(seed);
         map = new int[width, height];
         RandomFillMap();
 
@@ -46,6 +56,8 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
         }
 
         ProcessMap();
+
+        CmdGenerateObstacles();
 
         int borderSize = 1;
         int[,] borderedMap = new int[width + borderSize * 2, height + borderSize * 2];
@@ -63,6 +75,8 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
 
         MeshGenerator meshGen = this.gameObject.GetComponent<MeshGenerator>();
         meshGen.GenerateMesh(borderedMap, 1);
+
+        surface.BuildNavMesh();
     }
 
     void ProcessMap() {
@@ -418,4 +432,55 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
         }
     }
 
+    [Command]
+    public void CmdGenerateObstacles() {
+        int ObstaclesToSpawn = UnityEngine.Random.Range(10, 40);
+
+        int ObstaclesSpawned = 0;
+
+        List<List<Coord>> roomRegions = GetRegions(0);
+
+        while (ObstaclesSpawned != ObstaclesToSpawn) {
+
+            int r = UnityEngine.Random.Range(0, roomRegions.Count);
+            List<Coord> regions = roomRegions[r];
+
+            int ra = (int)UnityEngine.Random.Range(0, regions.Count);
+
+            Vector3 spawn = CoordToWorldPoint(regions[ra]);
+            spawn.y = -1.5f;
+
+            RpcSpawnObstacle("Obstacle", spawn, Quaternion.identity);
+
+            ObstaclesSpawned++;
+        }
+
+        //enemies
+        int EnemiesToSpawn = UnityEngine.Random.Range(10, 40);
+
+        int EnemiesSpawned = 0;
+
+        while (EnemiesSpawned != EnemiesToSpawn) {
+
+            int r = UnityEngine.Random.Range(0, roomRegions.Count);
+            List<Coord> regions = roomRegions[r];
+
+            int ra = (int)UnityEngine.Random.Range(0, regions.Count);
+
+            Vector3 spawn = CoordToWorldPoint(regions[ra]);
+            spawn.y = -1f;
+
+            int i = UnityEngine.Random.Range(0, 2);
+
+            RpcSpawnObstacle("Enemy" + i, spawn, Quaternion.identity);
+
+            EnemiesSpawned++;
+        }
+
+    }
+
+    [ClientRpc]
+    public void RpcSpawnObstacle(string name, Vector3 spawnPos, Quaternion rotation) {
+        objectPooler.SpawnFromPool(name, spawnPos, rotation);
+    }
 }

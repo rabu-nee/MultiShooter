@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class ObjectPooler : MonoBehaviour {
 
@@ -24,6 +25,7 @@ public class ObjectPooler : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
 
         foreach (Pool pool in pools) {
@@ -38,7 +40,6 @@ public class ObjectPooler : MonoBehaviour {
             poolDictionary.Add(pool.tag, objectPool);
         }
     }
-
 
     public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation) {
 
