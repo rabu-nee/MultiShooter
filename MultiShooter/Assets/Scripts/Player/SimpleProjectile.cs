@@ -3,26 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class SimpleProjectile : MonoBehaviour
-{
+public class SimpleProjectile : MonoBehaviour {
     [SerializeField]
     private Rigidbody projectileRigidBody;
     [SerializeField]
     private float damageAmount;
     [SerializeField]
     private float speed;
-
+    [SerializeField]
     private PlayerController projectileInstigator;
+    [SerializeField]
     private Collider instigatorCollider;
 
-    void Start()
-    {
+    void Start() {
 
     }
 
-    public void InitProjectile(Vector3 position, Vector3 direction, PlayerController instigator)
-    {
-        direction.Normalize();
+    public void InitProjectile(Vector3 position, Vector3 direction, PlayerController instigator) {
 
         transform.position = position;
         projectileRigidBody.velocity = direction * speed;
@@ -31,17 +28,14 @@ public class SimpleProjectile : MonoBehaviour
         instigatorCollider = instigator.GetComponentInChildren<Collider>();
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other != instigatorCollider)
-        {
-            if (NetworkServer.active)
-            {
+    private void OnTriggerEnter(Collider other) {
+        if (other != instigatorCollider) {
+            if (NetworkServer.active) {
                 IDamageable damageable = other.GetComponentInParent<IDamageable>();
-                if (damageable != null)
-                {
+                if (damageable != null) {
                     damageable.Damage(damageAmount);
                 }
+                gameObject.SetActive(false);
             }
         }
     }

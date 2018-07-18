@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using GameEvents;
 
 public class PlayerController : NetworkBehaviour, IDamageable {
+    #region Variables
     [Header("Components")]
     [SerializeField]
     private Rigidbody rigidBody;
     [SerializeField]
     private GameObject topdownCameraPrefab;
     [SerializeField]
-    private BoxCollider capsuleCollider;
+    private BoxCollider boxCollider;
 
     [Header("Movement")]
     [SerializeField]
     private float moveSpeed = 5.0f;
-    [SerializeField]
-    private float jumpForce = 500.0f;
 
 
     [Header("Stats")]
@@ -27,8 +26,6 @@ public class PlayerController : NetworkBehaviour, IDamageable {
     [Header("Shooting")]
     [SerializeField]
     private LayerMask projectileLayermask;
-    [SerializeField]
-    private GameObject projectilePrefab;
     [SerializeField]
     private Transform projectileOrigin;
     [SerializeField]
@@ -40,27 +37,27 @@ public class PlayerController : NetworkBehaviour, IDamageable {
 
     private ObjectPooler objectPooler;
 
-
     [SyncVar]
     private float currenthealth;
+    #endregion
+
+    public MapGenerator mapGen;
+
 
     private void Start() {
         if (isLocalPlayer) {
             topDownCameraPivot = Instantiate(topdownCameraPrefab);
             topDownCamera = topDownCameraPivot.GetComponentInChildren<Camera>();
         }
-
+        
+        
         objectPooler = ObjectPooler.Instance;
         currenthealth = maxHealth;
     }
 
     private void Update() {
         if (isLocalPlayer) {
-            //CheckForProjectile();
-            if (Input.GetButton("Fire1") && Time.time > nextFire) {
-                nextFire = Time.time + fireSpeed;
-                CmdFire();
-            }
+            CheckForProjectile();
         }
     }
 
@@ -70,23 +67,25 @@ public class PlayerController : NetworkBehaviour, IDamageable {
         }
     }
 
+    void CheckForProjectile() {
+        if (Input.GetButton("Fire1") && Time.time > nextFire) {
+            Vector3 direction = projectileOrigin.position - gameObject.transform.position;
+            CmdRequestProjectile(projectileOrigin.position, direction, gameObject);
+
+            nextFire = Time.time + fireSpeed;
+        }
+    }
+
     [Command]
-    void CmdFire() {
-        /*
-        // Create the Bullet from the Bullet Prefab
-        var bullet = (GameObject)Instantiate(
-            projectilePrefab,
-            projectileOrigin.position,
-            projectileOrigin.rotation);
+    private void CmdRequestProjectile(Vector3 position, Vector3 direction, GameObject obj) {
+        RpcSpawnProjectile(position, direction);
+    }
 
-        */
-
-        var bullet = objectPooler.SpawnFromPool("Bullet", projectileOrigin.position, projectileOrigin.rotation);
-        // Add velocity to the bullet
-        //bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * 12;
-
-        // Spawn the bullet on the Clients
-        NetworkServer.Spawn(bullet);
+    [ClientRpc]
+    private void RpcSpawnProjectile(Vector3 position, Vector3 direction) {
+        var bullet = objectPooler.SpawnFromPool("PlayerBullet", projectileOrigin.position, projectileOrigin.rotation);
+        SimpleProjectile newProjectile = bullet.GetComponent<SimpleProjectile>();
+        newProjectile.InitProjectile(position, direction, this);
     }
 
     private void Move() {
@@ -132,13 +131,15 @@ public class PlayerController : NetworkBehaviour, IDamageable {
         topDownCameraPivot.transform.position = transform.position;
     }
 
-
     public void Damage(float damageAmount) {
         currenthealth -= damageAmount;
 
+        /*
         if (currenthealth <= 0.0f) {
             enabled = false;
-            capsuleCollider.gameObject.SetActive(false);
+            boxCollider.gameObject.SetActive(false);
         }
+        */
     }
+
 }
