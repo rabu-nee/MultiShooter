@@ -341,6 +341,26 @@ Prefab:
       propertyPath: surface
       value: 
       objectReference: {fileID: 338963841}
+    - target: {fileID: 114294400966587708, guid: 4bef41486520aee459ecf2316725243c,
+        type: 2}
+      propertyPath: startingPositions.Array.data[0]
+      value: 
+      objectReference: {fileID: 629821231}
+    - target: {fileID: 114294400966587708, guid: 4bef41486520aee459ecf2316725243c,
+        type: 2}
+      propertyPath: startingPositions.Array.data[1]
+      value: 
+      objectReference: {fileID: 629821230}
+    - target: {fileID: 114294400966587708, guid: 4bef41486520aee459ecf2316725243c,
+        type: 2}
+      propertyPath: startingPositions.Array.data[2]
+      value: 
+      objectReference: {fileID: 629821229}
+    - target: {fileID: 114294400966587708, guid: 4bef41486520aee459ecf2316725243c,
+        type: 2}
+      propertyPath: startingPositions.Array.data[3]
+      value: 
+      objectReference: {fileID: 629821228}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4bef41486520aee459ecf2316725243c, type: 2}
   m_IsPrefabAsset: 0
@@ -350,6 +370,26 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 629821226}
   m_Script: {fileID: 11500000, guid: 1647bbaf26a4040d3bc6ffe5c06dd0d7, type: 3}
+--- !u!4 &629821228 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4113046884711260, guid: 4bef41486520aee459ecf2316725243c,
+    type: 2}
+  m_PrefabInternal: {fileID: 629821226}
+--- !u!4 &629821229 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4367850341887530, guid: 4bef41486520aee459ecf2316725243c,
+    type: 2}
+  m_PrefabInternal: {fileID: 629821226}
+--- !u!4 &629821230 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4220386522971462, guid: 4bef41486520aee459ecf2316725243c,
+    type: 2}
+  m_PrefabInternal: {fileID: 629821226}
+--- !u!4 &629821231 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4442097356100828, guid: 4bef41486520aee459ecf2316725243c,
+    type: 2}
+  m_PrefabInternal: {fileID: 629821226}
 --- !u!1 &706203968
 GameObject:
   m_ObjectHideFlags: 0
@@ -636,6 +676,7 @@ MonoBehaviour:
   button: {fileID: 1280748597}
   buttonObj: {fileID: 1280748594}
   mapGen: {fileID: 629821227}
+  players: []
 --- !u!114 &1771378776
 MonoBehaviour:
   m_ObjectHideFlags: 0

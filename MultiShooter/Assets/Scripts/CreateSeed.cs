@@ -12,11 +12,15 @@ public class CreateSeed : NetworkBehaviour {
     public GameObject buttonObj;
     public MapGenerator mapGen;
 
+    public List<PlayerController> players;
+
 
     private void Start() {
         if (!isServer) {
             buttonObj.SetActive(false);
         }
+
+        players = new List<PlayerController>();
     }
 
     public void OnButtonClick() {
@@ -44,6 +48,7 @@ public class CreateSeed : NetworkBehaviour {
     [ClientRpc]
     void RpcStartGame() {
         mapGen.GenerateMap();
+        GameEventManager.TriggerEvent(new GameEvent_RespawnNow(mapGen.startingPositions));
         buttonObj.SetActive(false);
     }
 }

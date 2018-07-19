@@ -166,7 +166,8 @@ MonoBehaviour:
     m_Bits: 4294967295
   projectileOrigin: {fileID: 4198314656423370}
   fireSpeed: 0.15
-  mapGen: {fileID: 0}
+  netId: {fileID: 114478171366061394}
+  startingPositions: []
 --- !u!114 &114128456095284640
 MonoBehaviour:
   m_ObjectHideFlags: 1

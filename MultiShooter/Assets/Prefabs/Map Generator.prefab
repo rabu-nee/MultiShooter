@@ -439,10 +439,10 @@ MonoBehaviour:
   surface: {fileID: 0}
   randomFillPercent: 43
   startingPositions:
-  - {fileID: 4442097356100828}
-  - {fileID: 4220386522971462}
-  - {fileID: 4367850341887530}
-  - {fileID: 4113046884711260}
+  - {fileID: 114100293665734170}
+  - {fileID: 114553288951916436}
+  - {fileID: 114622810598744432}
+  - {fileID: 114737925690162626}
 --- !u!114 &114553288951916436
 MonoBehaviour:
   m_ObjectHideFlags: 1

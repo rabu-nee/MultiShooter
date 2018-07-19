@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using GameEvents;
 
-public class PlayerController : NetworkBehaviour, IDamageable {
+public class PlayerController : NetworkBehaviour, IDamageable, IGameEventListener<GameEvent_RespawnNow> {
     #region Variables
     [Header("Components")]
     [SerializeField]
@@ -17,7 +17,6 @@ public class PlayerController : NetworkBehaviour, IDamageable {
     [Header("Movement")]
     [SerializeField]
     private float moveSpeed = 5.0f;
-
 
     [Header("Stats")]
     [SerializeField]
@@ -32,6 +31,9 @@ public class PlayerController : NetworkBehaviour, IDamageable {
     private float fireSpeed;
     private float nextFire;
 
+    public NetworkIdentity netId;
+    public Transform[] startingPositions;
+
     private GameObject topDownCameraPivot;
     private Camera topDownCamera;
 
@@ -40,8 +42,6 @@ public class PlayerController : NetworkBehaviour, IDamageable {
     [SyncVar]
     private float currenthealth;
     #endregion
-
-    public MapGenerator mapGen;
 
 
     private void Start() {
@@ -136,9 +136,42 @@ public class PlayerController : NetworkBehaviour, IDamageable {
 
         
         if (currenthealth <= 0.0f) {
-            enabled = false;
-            gameObject.SetActive(false);
+            CmdRequestRespawn();
         }
+    }
+
+    [Command]
+    void CmdRequestRespawn() {
+        RpcRespawn();
+    }
+
+    [ClientRpc]
+    void RpcRespawn() {
+        if (isLocalPlayer) {
+            // Set the spawn point to origin as a default value
+            Vector3 spawnPoint = Vector3.zero;
+
+            // If there is a spawn point array and the array is not empty, pick one at random
+            if (startingPositions != null && startingPositions.Length > 0) {
+                spawnPoint = startingPositions[netId.playerControllerId].transform.position;
+            }
+
+            // Set the player’s position to the chosen spawn point
+            transform.position = spawnPoint;
+        }
+    }
+
+
+
+    public void OnEnable() {
+        this.EventStartListening<GameEvent_RespawnNow>();
+    }
+    public void OnDisable() {
+        this.EventStopListening<GameEvent_RespawnNow>();
+    }
+    public void OnGameEvent(GameEvent_RespawnNow gameEvent) {
+        startingPositions = gameEvent.GetStartPos();
+        CmdRequestRespawn();
     }
 
 }

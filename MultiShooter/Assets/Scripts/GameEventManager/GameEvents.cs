@@ -90,28 +90,17 @@ namespace GameEvents {
         }
     }
 
-    public class GameEvent_SendSeedToClient : GameEvent {
-        public string seed;
+    public class GameEvent_RespawnNow : GameEvent {
+        public Transform[] startPositions;
 
-        public GameEvent_SendSeedToClient(string newSeed) {
-            seed = newSeed;
-            Debug.Log("GameEventManager called me");
+        public GameEvent_RespawnNow(Transform[] newStartPositions) {
+            startPositions = newStartPositions;
+
+            Debug.LogError("GameEvent RespawnNow");
         }
 
-        public string GetHostSeed() {
-            return seed;
-        }
-    }
-
-    public class GameEvent_RequestHostSeed : GameEvent {
-        public string seed;
-
-        public GameEvent_RequestHostSeed() {
-
-        }
-
-        public string GetHostSeed() {
-            return seed;
+        public Transform[] GetStartPos() {
+            return startPositions;
         }
     }
 }

@@ -23,16 +23,8 @@ public class Obstacle : NetworkBehaviour, IDamageable {
         currenthealth -= damageAmount;
 
         if (currenthealth <= 0.0f) {
-            RpcDestroy();
+            //enabled = false;
+            gameObject.SetActive(false);
         }
-    }
-
-    [ClientRpc]
-    void RpcDestroy() {
-        if (!isServer)
-            return;
-
-        enabled = false;
-        gameObject.SetActive(false);
     }
 }

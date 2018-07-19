@@ -477,10 +477,31 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
             EnemiesSpawned++;
         }
 
+        //placing starting positions
+        //Transform[] _startingPositions
+        foreach (Transform pos in startingPositions) {
+            int r = UnityEngine.Random.Range(0, roomRegions.Count);
+            List<Coord> regions = roomRegions[r];
+
+            int ra = (int)UnityEngine.Random.Range(0, regions.Count);
+
+            Vector3 spawn = CoordToWorldPoint(regions[ra]);
+
+            spawn.y = 0f;
+
+            pos.position = spawn;
+            //RpcSetPos(pos.position, spawn);
+        }
     }
+
 
     [ClientRpc]
     public void RpcSpawnObstacle(string name, Vector3 spawnPos, Quaternion rotation) {
         objectPooler.SpawnFromPool(name, spawnPos, rotation);
+    }
+
+    [ClientRpc]
+    public void RpcSetPos(Vector3 startPos, Vector3 _spawn) {
+        startPos = _spawn;
     }
 }
