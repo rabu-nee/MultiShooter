@@ -82,7 +82,6 @@ namespace GameEvents {
 
         public GameEvent_SendSeed(string newSeed) {
             seed = newSeed;
-            Debug.Log("GameEventManager called me");
         }
 
         public string GetHostSeed() {
@@ -95,12 +94,22 @@ namespace GameEvents {
 
         public GameEvent_RespawnNow(Transform[] newStartPositions) {
             startPositions = newStartPositions;
-
-            Debug.LogError("GameEvent RespawnNow");
         }
 
         public Transform[] GetStartPos() {
             return startPositions;
+        }
+    }
+
+    public class GameEvent_RespawnDeath : GameEvent {
+        public float scorePenalty;
+
+        public GameEvent_RespawnDeath(float newPenalty) {
+            scorePenalty = newPenalty;
+        }
+
+        public float GetPenalty() {
+            return scorePenalty;
         }
     }
 }

@@ -8,19 +8,14 @@ using UnityEngine.UI;
 public class CreateSeed : NetworkBehaviour {
 
     public string seed;
-    public Image button;
     public GameObject buttonObj;
     public MapGenerator mapGen;
-
-    public List<PlayerController> players;
 
 
     private void Start() {
         if (!isServer) {
             buttonObj.SetActive(false);
         }
-
-        players = new List<PlayerController>();
     }
 
     public void OnButtonClick() {

@@ -2,8 +2,9 @@
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
+using GameEvents;
 
-public class Obstacle : NetworkBehaviour {
+public class Health : NetworkBehaviour {
 
     public const int maxHealth = 5;
 
@@ -12,6 +13,7 @@ public class Obstacle : NetworkBehaviour {
     [SyncVar]
     public int currentHealth = maxHealth;
 
+
     public void TakeDamage(int amount) {
         if (!isServer)
             return;
@@ -19,9 +21,17 @@ public class Obstacle : NetworkBehaviour {
         currentHealth -= amount;
         if (currentHealth <= 0) {
             if (destroyOnDeath) {
-                Destroy(gameObject);
+                RpcDestroy();
+            }
+            else {
+                GameEventManager.TriggerEvent(new GameEvent_RespawnDeath(100f));
+                currentHealth = maxHealth;
             }
         }
     }
-    
+
+    [ClientRpc]
+    void RpcDestroy() {
+        Destroy(gameObject);
+    }
 }

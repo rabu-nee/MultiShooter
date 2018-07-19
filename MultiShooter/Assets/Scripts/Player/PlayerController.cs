@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using GameEvents;
 
-public class PlayerController : NetworkBehaviour, IDamageable, IGameEventListener<GameEvent_RespawnNow> {
+public class PlayerController : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>, IGameEventListener<GameEvent_RespawnDeath> {
     #region Variables
     [Header("Components")]
     [SerializeField]
@@ -18,18 +18,17 @@ public class PlayerController : NetworkBehaviour, IDamageable, IGameEventListene
     [SerializeField]
     private float moveSpeed = 5.0f;
 
-    [Header("Stats")]
-    [SerializeField]
-    private float maxHealth;
-
     [Header("Shooting")]
-    [SerializeField]
-    private LayerMask projectileLayermask;
     [SerializeField]
     private Transform projectileOrigin;
     [SerializeField]
     private float fireSpeed;
     private float nextFire;
+
+    public Health health;
+
+    [SerializeField]
+    private float score;
 
     public NetworkIdentity netId;
     public Transform[] startingPositions;
@@ -38,9 +37,6 @@ public class PlayerController : NetworkBehaviour, IDamageable, IGameEventListene
     private Camera topDownCamera;
 
     private ObjectPooler objectPooler;
-
-    [SyncVar]
-    private float currenthealth;
     #endregion
 
 
@@ -52,7 +48,6 @@ public class PlayerController : NetworkBehaviour, IDamageable, IGameEventListene
         
         
         objectPooler = ObjectPooler.Instance;
-        currenthealth = maxHealth;
     }
 
     private void Update() {
@@ -71,7 +66,6 @@ public class PlayerController : NetworkBehaviour, IDamageable, IGameEventListene
         if (Input.GetButton("Fire1") && Time.time > nextFire) {
             Vector3 direction = projectileOrigin.position - gameObject.transform.position;
             CmdRequestProjectile(projectileOrigin.position, direction, gameObject);
-
             nextFire = Time.time + fireSpeed;
         }
     }
@@ -83,10 +77,12 @@ public class PlayerController : NetworkBehaviour, IDamageable, IGameEventListene
 
     [ClientRpc]
     private void RpcSpawnProjectile(Vector3 position, Vector3 direction) {
-        var bullet = objectPooler.SpawnFromPool("PlayerBullet", projectileOrigin.position, projectileOrigin.rotation);
+        GameObject bullet = objectPooler.SpawnFromPool("PlayerBullet", projectileOrigin.position, projectileOrigin.rotation);
+
         SimpleProjectile newProjectile = bullet.GetComponent<SimpleProjectile>();
         newProjectile.InitProjectile(position, direction, this);
     }
+    
 
     private void Move() {
         Vector3 motion = Vector3.zero;
@@ -131,14 +127,6 @@ public class PlayerController : NetworkBehaviour, IDamageable, IGameEventListene
         topDownCameraPivot.transform.position = transform.position;
     }
 
-    public void Damage(float damageAmount) {
-        currenthealth -= damageAmount;
-
-        
-        if (currenthealth <= 0.0f) {
-            CmdRequestRespawn();
-        }
-    }
 
     [Command]
     void CmdRequestRespawn() {
@@ -165,13 +153,22 @@ public class PlayerController : NetworkBehaviour, IDamageable, IGameEventListene
 
     public void OnEnable() {
         this.EventStartListening<GameEvent_RespawnNow>();
+        this.EventStartListening<GameEvent_RespawnDeath>();
     }
     public void OnDisable() {
         this.EventStopListening<GameEvent_RespawnNow>();
+        this.EventStopListening<GameEvent_RespawnDeath>();
     }
     public void OnGameEvent(GameEvent_RespawnNow gameEvent) {
         startingPositions = gameEvent.GetStartPos();
         CmdRequestRespawn();
     }
 
+    public void OnGameEvent(GameEvent_RespawnDeath gameEvent) {
+        if(health.currentHealth <= 0) {
+            score = -gameEvent.GetPenalty();
+            CmdRequestRespawn();
+        }
+
+    }
 }

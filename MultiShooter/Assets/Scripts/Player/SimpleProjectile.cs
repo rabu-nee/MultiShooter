@@ -1,13 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class SimpleProjectile : MonoBehaviour {
     [SerializeField]
     private Rigidbody projectileRigidBody;
     [SerializeField]
-    private float damageAmount;
+    private int damageAmount;
     [SerializeField]
     private float speed;
     [SerializeField]
@@ -28,15 +27,17 @@ public class SimpleProjectile : MonoBehaviour {
         instigatorCollider = instigator.GetComponentInChildren<Collider>();
     }
 
-    private void OnTriggerEnter(Collider other) {
-        if (other != instigatorCollider) {
-            if (NetworkServer.active) {
-                IDamageable damageable = other.GetComponentInParent<IDamageable>();
-                if (damageable != null) {
-                    damageable.Damage(damageAmount);
-                }
+
+    void OnTriggerEnter(Collider collision) {
+        if (collision != instigatorCollider) {
+            var hit = collision.gameObject;
+            var health = hit.GetComponent<Health>();
+            if (health != null) {
+                health.TakeDamage(damageAmount);
             }
-            gameObject.SetActive(false);
+                    gameObject.SetActive(false) ;
         }
     }
+
+
 }

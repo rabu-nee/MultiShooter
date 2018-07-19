@@ -40,13 +40,14 @@ GameObject:
   - component: {fileID: 54010991765066252}
   - component: {fileID: 33607083498604858}
   - component: {fileID: 23874954176238920}
+  - component: {fileID: 114244561468770806}
   - component: {fileID: 65969346188395384}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 40
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &4198314656423370
 Transform:
@@ -55,7 +56,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1897406168949082}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.521}
+  m_LocalPosition: {x: 0, y: 0, z: 0.99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4348443062689648}
@@ -68,7 +69,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1988353337418452}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.020469666, y: 0.08513713, z: -1.6797988}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4198314656423370}
@@ -160,12 +161,10 @@ MonoBehaviour:
     type: 2}
   boxCollider: {fileID: 65969346188395384}
   moveSpeed: 350
-  maxHealth: 5
-  projectileLayermask:
-    serializedVersion: 2
-    m_Bits: 4294967295
   projectileOrigin: {fileID: 4198314656423370}
   fireSpeed: 0.15
+  health: {fileID: 114244561468770806}
+  score: 0
   netId: {fileID: 114478171366061394}
   startingPositions: []
 --- !u!114 &114128456095284640
@@ -189,6 +188,19 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 12
   m_InterpolateMovement: 1
+--- !u!114 &114244561468770806
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1988353337418452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 221a42b1bf95b3540a25810aa5e8c8d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyOnDeath: 0
+  currentHealth: 5
 --- !u!114 &114478171366061394
 MonoBehaviour:
   m_ObjectHideFlags: 1
