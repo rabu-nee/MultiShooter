@@ -153,7 +153,7 @@ public class PlayerController : NetworkBehaviour, IDamageable, IGameEventListene
 
             // If there is a spawn point array and the array is not empty, pick one at random
             if (startingPositions != null && startingPositions.Length > 0) {
-                spawnPoint = startingPositions[netId.playerControllerId].transform.position;
+                spawnPoint = startingPositions[Random.Range(0, startingPositions.Length)].transform.position;
             }
 
             // Set the player’s position to the chosen spawn point

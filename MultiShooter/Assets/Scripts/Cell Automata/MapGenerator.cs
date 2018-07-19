@@ -59,6 +59,8 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
 
         CmdGenerateObstacles();
 
+        RandomNetPos();
+
         int borderSize = 1;
         int[,] borderedMap = new int[width + borderSize * 2, height + borderSize * 2];
 
@@ -478,8 +480,9 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
         }
 
         //placing starting positions
-        //Transform[] _startingPositions
-        foreach (Transform pos in startingPositions) {
+        /*
+        Transform[] _startingPositions = startingPositions;
+        foreach (Transform pos in _startingPositions) {
             int r = UnityEngine.Random.Range(0, roomRegions.Count);
             List<Coord> regions = roomRegions[r];
 
@@ -490,7 +493,31 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
             spawn.y = 0f;
 
             pos.position = spawn;
-            //RpcSetPos(pos.position, spawn);
+        }
+
+        for(int i = 0; i < startingPositions.Length; i++) {
+ 
+            RpcSetPos(startingPositions[i].position, _startingPositions[i].position);
+        }
+        */
+    }
+
+    public void RandomNetPos() {
+        //placing starting positions
+        List<List<Coord>> roomRegions = GetRegions(0);
+
+        Transform[] _startingPositions = startingPositions;
+        foreach (Transform pos in _startingPositions) {
+            int r = UnityEngine.Random.Range(0, roomRegions.Count);
+            List<Coord> regions = roomRegions[r];
+
+            int ra = (int)UnityEngine.Random.Range(0, regions.Count);
+
+            Vector3 spawn = CoordToWorldPoint(regions[ra]);
+
+            spawn.y = 0f;
+
+            pos.position = spawn;
         }
     }
 
@@ -503,5 +530,6 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
     [ClientRpc]
     public void RpcSetPos(Vector3 startPos, Vector3 _spawn) {
         startPos = _spawn;
+        Debug.LogError("set pos");
     }
 }

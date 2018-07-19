@@ -71,8 +71,8 @@ MonoBehaviour:
     i13: 226
     i14: 53
     i15: 18
-  m_ServerOnly: 1
-  m_LocalPlayerAuthority: 0
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114916217879929408
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -105,4 +105,7 @@ MonoBehaviour:
     size: 0
   - tag: EnemyBullet2
     prefab: {fileID: 1169221506067772, guid: d3672d9fd604e9a4196a1bd84f447160, type: 2}
+    size: 0
+  - tag: NetworkPos
+    prefab: {fileID: 1107175562946380, guid: ce183493769e7984f887278711e31032, type: 2}
     size: 0
