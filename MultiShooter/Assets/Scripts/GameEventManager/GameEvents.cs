@@ -91,13 +91,19 @@ namespace GameEvents {
 
     public class GameEvent_RespawnNow : GameEvent {
         public Transform[] startPositions;
+        public Transform[] enemyStartPos;
 
-        public GameEvent_RespawnNow(Transform[] newStartPositions) {
+        public GameEvent_RespawnNow(Transform[] newStartPositions, Transform[] newEnemyStartPos) {
             startPositions = newStartPositions;
+            enemyStartPos = newEnemyStartPos;
         }
 
         public Transform[] GetStartPos() {
             return startPositions;
+        }
+
+        public Transform[] GetEnemyPos() {
+            return enemyStartPos;
         }
     }
 

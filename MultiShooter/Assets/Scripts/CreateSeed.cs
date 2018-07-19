@@ -43,7 +43,7 @@ public class CreateSeed : NetworkBehaviour {
     [ClientRpc]
     void RpcStartGame() {
         mapGen.GenerateMap();
-        GameEventManager.TriggerEvent(new GameEvent_RespawnNow(mapGen.startingPositions));
+        GameEventManager.TriggerEvent(new GameEvent_RespawnNow(mapGen.startingPositions, mapGen.enemyStartPos));
         buttonObj.SetActive(false);
     }
 }

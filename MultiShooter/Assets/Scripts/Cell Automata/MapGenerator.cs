@@ -21,6 +21,7 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
 
     int[,] map;
     public Transform[] startingPositions;
+    public Transform[] enemyStartPos;
 
     private ObjectPooler objectPooler;
 
@@ -59,7 +60,8 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
 
         CmdGenerateObstacles();
 
-        RandomNetPos();
+        RandomPos(startingPositions);
+        RandomPos(enemyStartPos);
 
         int borderSize = 1;
         int[,] borderedMap = new int[width + borderSize * 2, height + borderSize * 2];
@@ -456,36 +458,13 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
 
             ObstaclesSpawned++;
         }
-
-        //enemies
-        int EnemiesToSpawn = UnityEngine.Random.Range(10, 40);
-
-        int EnemiesSpawned = 0;
-
-        while (EnemiesSpawned != EnemiesToSpawn) {
-
-            int r = UnityEngine.Random.Range(0, roomRegions.Count);
-            List<Coord> regions = roomRegions[r];
-
-            int ra = (int)UnityEngine.Random.Range(0, regions.Count);
-
-            Vector3 spawn = CoordToWorldPoint(regions[ra]);
-            spawn.y = -1f;
-
-            int i = UnityEngine.Random.Range(0, 2);
-
-            RpcSpawnObstacle("Enemy" + i, spawn, Quaternion.identity);
-
-            EnemiesSpawned++;
-        }
     }
 
-    public void RandomNetPos() {
+    public void RandomPos(Transform[] positions) {
         //placing starting positions
         List<List<Coord>> roomRegions = GetRegions(0);
 
-        Transform[] _startingPositions = startingPositions;
-        foreach (Transform pos in _startingPositions) {
+        foreach (Transform pos in positions) {
             int r = UnityEngine.Random.Range(0, roomRegions.Count);
             List<Coord> regions = roomRegions[r];
 
@@ -493,7 +472,7 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
 
             Vector3 spawn = CoordToWorldPoint(regions[ra]);
 
-            spawn.y = 0f;
+            spawn.y = -1.5f;
 
             pos.position = spawn;
         }
@@ -503,10 +482,5 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
     [ClientRpc]
     public void RpcSpawnObstacle(string name, Vector3 spawnPos, Quaternion rotation) {
         GameObject spawned = objectPooler.SpawnFromPool(name, spawnPos, rotation);
-    }
-
-    [ClientRpc]
-    public void RpcSetPos(Vector3 startPos, Vector3 _spawn) {
-        startPos = _spawn;
     }
 }
