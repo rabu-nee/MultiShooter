@@ -23,17 +23,22 @@ public class EnemyPatrol : IFSMState<EnemyController> {
 
     public void Reason(EnemyController e) {
 
-        
+
 
         // can we see the player? if so, we gotta chase after him!
-        RaycastHit hit;
-        if (Physics.Raycast(e.transform.position, e.playerTransform.position - e.transform.position, out hit)) {
-            if (hit.transform.tag == Tags.PLAYER) {
-                Debug.DrawRay(e.transform.position, e.playerTransform.position - e.transform.position, Color.red);
-                e.ChangeState(new EnemyChase());
-            }
-            else {
-                Debug.DrawRay(e.transform.position, e.playerTransform.position - e.transform.position, Color.green);
+        foreach (Transform transform in e.playerTransform) {
+
+
+            RaycastHit hit;
+            if (Physics.Raycast(e.transform.position, transform.position - e.transform.position, out hit)) {
+                if (hit.transform.tag == Tags.PLAYER) {
+                    Debug.DrawRay(e.transform.position, transform.position - e.transform.position, Color.red);
+                    e.target = transform;
+                    e.ChangeState(new EnemyChase());
+                }
+                else {
+                    Debug.DrawRay(e.transform.position, transform.position - e.transform.position, Color.green);
+                }
             }
         }
     }

@@ -101,6 +101,11 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
 
     [Command]
     void CmdFire() {
+        RpcSpawnBullet();
+    }
+
+    [ClientRpc]
+    void RpcSpawnBullet() {
         // Create the Bullet from the Bullet Prefab
         var bullet = objectPooler.SpawnFromPool("PlayerBullet", bulletSpawn.position, bulletSpawn.rotation);
 
@@ -110,8 +115,7 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
         // Add velocity to the bullet
         bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * bulletSpeed;
 
-        // Spawn the bullet on the Clients
-        NetworkServer.Spawn(bullet);
+
     }
 
     public override void OnStartLocalPlayer() {

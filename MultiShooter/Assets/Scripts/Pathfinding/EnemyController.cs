@@ -6,9 +6,10 @@ using GameEvents;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyController : StatefulMonoBehaviour<EnemyController>, IGameEventListener<GameEvent_RespawnNow> {
-    public Transform playerTransform;
+    public Transform[] playerTransform;
     public List<Vector3> waypoints = new List<Vector3>();
     public Enemy enemyScript;
+    public Transform target;
 
 
     /*
@@ -48,7 +49,12 @@ public class EnemyController : StatefulMonoBehaviour<EnemyController>, IGameEven
     }
     public void OnGameEvent(GameEvent_RespawnNow gameEvent) {
         Transform[] wayPoints = gameEvent.GetWaypointPos();
-        playerTransform = GameObject.FindGameObjectWithTag(Tags.PLAYER).GetComponent<Transform>();
+
+        GameObject[] players = GameObject.FindGameObjectsWithTag(Tags.PLAYER);
+        playerTransform = new Transform[players.Length];
+        for (int i = 0; i < players.Length; i++) {
+            playerTransform[i] = players[i].transform;
+        }
 
         // filter out the root objects position
         foreach (Transform t in wayPoints) {

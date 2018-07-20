@@ -62,10 +62,10 @@ MonoBehaviour:
     prefab: {fileID: 1415026079414856, guid: e1809a8a1d62df740904f41390c2d7c9, type: 2}
     size: 40
   - tag: Enemy2
-    prefab: {fileID: 1415026079414856, guid: e1809a8a1d62df740904f41390c2d7c9, type: 2}
+    prefab: {fileID: 1643790651344622, guid: fad2f3261647c5f4ca0f5571c69c0617, type: 2}
     size: 40
   - tag: Enemy3
-    prefab: {fileID: 1415026079414856, guid: e1809a8a1d62df740904f41390c2d7c9, type: 2}
+    prefab: {fileID: 1972661707294740, guid: 3adf898a8819bd8459ee7a6a74339fe1, type: 2}
     size: 40
   - tag: EnemyBullet1
     prefab: {fileID: 1756628363918102, guid: 452b841728da5374db58a41644c142d7, type: 2}

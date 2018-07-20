@@ -29,6 +29,13 @@ public class Enemy : NetworkBehaviour {
     [Command]
     void CmdRequestBullet() {
 
+ 
+
+        RpcSpawnBullet();
+    }
+
+    [ClientRpc]
+    void RpcSpawnBullet() {
         foreach (Transform bulletSp in bulletSpawn) {
             var bullet = objectPooler.SpawnFromPool("EnemyBullet1", bulletSp.position, bulletSp.rotation);
 
@@ -38,15 +45,7 @@ public class Enemy : NetworkBehaviour {
             // Add velocity to the bullet
             bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed;
 
-            // Spawn the bullet on the Clients
-            NetworkServer.Spawn(bullet);
+
         }
-
-        //RpcSpawnBullet();
-    }
-
-    [ClientRpc]
-    void RpcSpawnBullet() {
-
     }
 }
