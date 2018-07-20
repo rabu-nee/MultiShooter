@@ -5,11 +5,12 @@ using UnityEngine.Networking;
 using GameEvents;
 using UnityEngine.UI;
 
-public class CreateSeed : NetworkBehaviour {
+public class CreateSeed : NetworkBehaviour, IGameEventListener<GameEvent_ScoreUpdate> {
 
     public string seed;
     public GameObject buttonObj;
     public MapGenerator mapGen;
+    public Text[] scoreTexts;
 
 
     private void Start() {
@@ -45,5 +46,27 @@ public class CreateSeed : NetworkBehaviour {
         mapGen.GenerateMap();
         GameEventManager.TriggerEvent(new GameEvent_RespawnNow(mapGen.startingPositions, mapGen.enemyStartPos, mapGen.obstacleStartPos, mapGen.waypointPos));
         buttonObj.SetActive(false);
+    }
+
+    public void OnEnable() {
+        this.EventStartListening<GameEvent_ScoreUpdate>();
+
+    }
+    public void OnDisable() {
+        this.EventStartListening<GameEvent_ScoreUpdate>();
+    }
+
+
+    public void OnGameEvent(GameEvent_ScoreUpdate gameEvent) {
+        float score = gameEvent.GetScore();
+        int index = gameEvent.GetIndex();
+
+        RpcUpdateScore(index, score);
+    }
+
+    [ClientRpc]
+    void RpcUpdateScore( int index,float score) {
+
+        scoreTexts[index].text = "Player " +index + ": " + score;
     }
 }

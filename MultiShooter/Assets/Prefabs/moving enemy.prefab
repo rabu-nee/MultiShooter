@@ -162,6 +162,8 @@ MonoBehaviour:
   - {fileID: 4797810882707154}
   fireSpeed: 0.25
   bulletSpeed: 10
+  bulletType: 1
+  alternate: 0
 --- !u!114 &114435464424292418
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -227,6 +229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyOnDeath: 1
+  addScore: 1000
   currentHealth: 5
 --- !u!195 &195065279944628030
 NavMeshAgent:

@@ -38,10 +38,6 @@ public class EnemySpawner : NetworkBehaviour, IGameEventListener<GameEvent_Respa
             int r2 = Random.Range(0, 2);
 
             var enemy = objectPooler.SpawnFromPool("Enemy" + r, spawnPosition, spawnRotation);
-            //Enemy en = enemy.GetComponent<Enemy>();
-            //en.bulletType = 1;
-            //en.alternate = (r2 == 0);
-
 
             NetworkServer.Spawn(enemy);
         }

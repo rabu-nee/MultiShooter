@@ -10,6 +10,7 @@ namespace C
 		public const int UI = 5;
 		public const int PLAYER = 8;
 		public const int ENEMY = 9;
+		public const int SPECIAL_BULLET = 10;
 
 
 		public static int onlyIncluding( params int[] layers )

@@ -2,7 +2,7 @@
 using UnityEngine.Networking;
 using GameEvents;
 
-public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>, IGameEventListener<GameEvent_RespawnDeath> {
+public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>, IGameEventListener<GameEvent_RespawnDeath>, IGameEventListener<GameEvent_EnemyKill> {
     public Transform bulletSpawn;
     public Material playerMat;
 
@@ -21,7 +21,10 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
     private float nextFire;
     public float bulletSpeed;
 
-    [SerializeField]
+    public NetworkIdentity netIdentity;
+    public int index;
+
+    [SyncVar]
     private float score;
 
     public Health health;
@@ -39,6 +42,7 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
             topDownCamera = topDownCameraPivot.GetComponentInChildren<Camera>();
         }
 
+        index = int.Parse(netId.ToString());
 
         objectPooler = ObjectPooler.Instance;
     }
@@ -52,6 +56,7 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
 
         if (Input.GetButton("Fire1") && Time.time > nextFire) {
             CmdFire();
+            GameEventManager.TriggerEvent(new GameEvent_Shoot());
             nextFire = Time.time + fireSpeed;
         }
     }
@@ -146,10 +151,12 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
     public void OnEnable() {
         this.EventStartListening<GameEvent_RespawnNow>();
         this.EventStartListening<GameEvent_RespawnDeath>();
+        this.EventStartListening<GameEvent_EnemyKill>();
     }
     public void OnDisable() {
         this.EventStopListening<GameEvent_RespawnNow>();
         this.EventStopListening<GameEvent_RespawnDeath>();
+        this.EventStopListening<GameEvent_EnemyKill>();
     }
     public void OnGameEvent(GameEvent_RespawnNow gameEvent) {
         startingPositions = gameEvent.GetStartPos();
@@ -158,9 +165,23 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
 
     public void OnGameEvent(GameEvent_RespawnDeath gameEvent) {
         if (health.currentHealth <= 0) {
-            score = -gameEvent.GetPenalty();
+            GameObject killer = gameEvent.GetInstigator();
+
+            if(!GameObject.ReferenceEquals(killer, gameObject)) {
+                score -= gameEvent.GetPenalty();
+                GameEventManager.TriggerEvent(new GameEvent_ScoreUpdate(score, index));
+            }
+
             CmdRequestRespawn();
         }
+    }
 
+    public void OnGameEvent(GameEvent_EnemyKill gameEvent) {
+        GameObject enemyKiller = gameEvent.GetInstigator();
+
+        if(GameObject.ReferenceEquals(enemyKiller,gameObject)) {
+            score += gameEvent.GetScoreAdd();
+            GameEventManager.TriggerEvent(new GameEvent_ScoreUpdate(score, index));
+        }
     }
 }

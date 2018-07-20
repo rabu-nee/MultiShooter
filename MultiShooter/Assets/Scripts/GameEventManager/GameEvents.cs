@@ -121,13 +121,67 @@ namespace GameEvents {
 
     public class GameEvent_RespawnDeath : GameEvent {
         public float scorePenalty;
+        public GameObject instigator;
 
-        public GameEvent_RespawnDeath(float newPenalty) {
+        public GameEvent_RespawnDeath(float newPenalty, GameObject newInstigator) {
             scorePenalty = newPenalty;
+            instigator = newInstigator;
         }
 
         public float GetPenalty() {
             return scorePenalty;
+        }
+
+        public GameObject GetInstigator() {
+            return instigator;
+        }
+    }
+
+    public class GameEvent_EnemyKill : GameEvent {
+        public float scoreAdd;
+        public GameObject instigator;
+
+        public GameEvent_EnemyKill(float newScoreAdd, GameObject newInstigator) {
+            scoreAdd = newScoreAdd;
+            instigator = newInstigator;
+        }
+
+        public float GetScoreAdd() {
+            return scoreAdd;
+        }
+
+        public GameObject GetInstigator() {
+            return instigator;
+        }
+    }
+
+    public class GameEvent_Shoot : GameEvent {
+        public GameEvent_Shoot() {
+            
+        }
+    }
+
+    public class GameEvent_Win : GameEvent {
+        public GameEvent_Win() {
+
+        }
+    }
+
+    public class GameEvent_ScoreUpdate : GameEvent {
+        public float score;
+        public int index;
+
+        public GameEvent_ScoreUpdate(float newScore, int newIndex) {
+            score = newScore;
+            index = newIndex;
+        }
+
+        public float GetScore() {
+            return score;
+        }
+
+        public int GetIndex() {
+            return index;
         }
     }
 }

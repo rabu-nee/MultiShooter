@@ -216,6 +216,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyOnDeath: 1
+  addScore: 500
   currentHealth: 5
 --- !u!114 &114394107952482788
 MonoBehaviour:
@@ -267,6 +268,8 @@ MonoBehaviour:
   - {fileID: 4427827100068728}
   fireSpeed: 0.25
   bulletSpeed: 10
+  bulletType: 1
+  alternate: 1
 --- !u!136 &136085020985057710
 CapsuleCollider:
   m_ObjectHideFlags: 1

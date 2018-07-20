@@ -256,6 +256,88 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &934994313
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4872731290803168, guid: 747ddbd914e8e4148b40c57efb5a4fce, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -1.1141634
+      objectReference: {fileID: 0}
+    - target: {fileID: 4872731290803168, guid: 747ddbd914e8e4148b40c57efb5a4fce, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -12.828125
+      objectReference: {fileID: 0}
+    - target: {fileID: 4872731290803168, guid: 747ddbd914e8e4148b40c57efb5a4fce, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -0.20494072
+      objectReference: {fileID: 0}
+    - target: {fileID: 4872731290803168, guid: 747ddbd914e8e4148b40c57efb5a4fce, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4872731290803168, guid: 747ddbd914e8e4148b40c57efb5a4fce, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4872731290803168, guid: 747ddbd914e8e4148b40c57efb5a4fce, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4872731290803168, guid: 747ddbd914e8e4148b40c57efb5a4fce, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4872731290803168, guid: 747ddbd914e8e4148b40c57efb5a4fce, type: 2}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114786002003468344, guid: 747ddbd914e8e4148b40c57efb5a4fce,
+        type: 2}
+      propertyPath: soundLevelComplete
+      value: 
+      objectReference: {fileID: 8300000, guid: bdba993ddbacd6c4181e516239b6da37, type: 3}
+    - target: {fileID: 114786002003468344, guid: 747ddbd914e8e4148b40c57efb5a4fce,
+        type: 2}
+      propertyPath: soundRespawn
+      value: 
+      objectReference: {fileID: 8300000, guid: 7187f2fa1a56980428d0065d0993e719, type: 3}
+    - target: {fileID: 114786002003468344, guid: 747ddbd914e8e4148b40c57efb5a4fce,
+        type: 2}
+      propertyPath: soundEnemyDeath
+      value: 
+      objectReference: {fileID: 8300000, guid: e435209e98fd59a4e8a781cc5d3ba82b, type: 3}
+    - target: {fileID: 114786002003468344, guid: 747ddbd914e8e4148b40c57efb5a4fce,
+        type: 2}
+      propertyPath: soundShoot
+      value: 
+      objectReference: {fileID: 8300000, guid: d0d05f0cff736be4f82b170c5a2d75af, type: 3}
+    - target: {fileID: 114786002003468344, guid: 747ddbd914e8e4148b40c57efb5a4fce,
+        type: 2}
+      propertyPath: soundPlayerDeath
+      value: 
+      objectReference: {fileID: 8300000, guid: 9937ad3838964364293c229de48173f4, type: 3}
+    - target: {fileID: 114786002003468344, guid: 747ddbd914e8e4148b40c57efb5a4fce,
+        type: 2}
+      propertyPath: MusicVolume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114786002003468344, guid: 747ddbd914e8e4148b40c57efb5a4fce,
+        type: 2}
+      propertyPath: SfxVolume
+      value: 0.52
+      objectReference: {fileID: 0}
+    - target: {fileID: 82142477969777704, guid: 747ddbd914e8e4148b40c57efb5a4fce,
+        type: 2}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 747ddbd914e8e4148b40c57efb5a4fce, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!1 &1120630585
 GameObject:
   m_ObjectHideFlags: 0

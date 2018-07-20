@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using GameEvents;
 
 public class Enemy : NetworkBehaviour {
     public Transform[] bulletSpawn;
@@ -24,15 +25,13 @@ public class Enemy : NetworkBehaviour {
 
         if (Time.time > nextFire) {
             CmdRequestBullet();
+            //GameEventManager.TriggerEvent(new GameEvent_Shoot());
             nextFire = Time.time + fireSpeed;
         }
     }
 
     [Command]
     void CmdRequestBullet() {
-
- 
-
         RpcSpawnBullet();
     }
 

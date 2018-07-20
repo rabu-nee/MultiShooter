@@ -11,7 +11,11 @@ public class SoundSettings {
 }
 
 public class SoundManager : PersistentSingleton<SoundManager>,
-  IGameEventListener<GameEvent_Engine> {
+  IGameEventListener<GameEvent_Engine>,
+    IGameEventListener<GameEvent_EnemyKill>,
+    IGameEventListener<GameEvent_RespawnDeath>,
+    IGameEventListener<GameEvent_Shoot>,
+    IGameEventListener<GameEvent_Win>{
     /*
      * IGameEventListener<GameEvent_SOMETHINGSOMETHING>,
      * ...{
@@ -26,6 +30,7 @@ public class SoundManager : PersistentSingleton<SoundManager>,
     /// the music volume
     [Range(0, 1)]
     public float MusicVolume = 0.3f;
+    public AudioSource bgm;
 
     [Header("Sound Effects")]
     /// true if the sound fx are enabled
@@ -33,6 +38,7 @@ public class SoundManager : PersistentSingleton<SoundManager>,
     /// the sound fx volume
     [Range(0, 1)]
     public float SfxVolume = 1f;
+    
 
     protected const string _saveFolderName = "Engine/";
     protected const string _saveFileName = "sound.settings";
@@ -142,6 +148,7 @@ public class SoundManager : PersistentSingleton<SoundManager>,
             case (GameEngineEventType.LevelStart):
                 Debug.Log("LevelStart");
                 levelStartSound();
+                PlayBackgroundMusic(bgm);
                 break;
             case (GameEngineEventType.LevelComplete):
                 Debug.Log("LevelComplete");
@@ -170,13 +177,37 @@ public class SoundManager : PersistentSingleton<SoundManager>,
 
     protected virtual void OnEnable() {
         this.EventStartListening<GameEvent_Engine>();
+        this.EventStartListening<GameEvent_EnemyKill>();
+        this.EventStartListening<GameEvent_RespawnDeath>();
+        this.EventStartListening<GameEvent_Shoot>();
+        this.EventStartListening<GameEvent_Win>();
         LoadSoundSettings();
     }
 
     protected virtual void OnDisable() {
         if (_enabled) {
             this.EventStopListening<GameEvent_Engine>();
+            this.EventStopListening<GameEvent_EnemyKill>();
+            this.EventStopListening<GameEvent_RespawnDeath>();
+            this.EventStopListening<GameEvent_Shoot>();
+            this.EventStopListening<GameEvent_Win>();
         }
+    }
+
+    public void OnGameEvent(GameEvent_EnemyKill e) {
+        EnemyDeathSound();
+    }
+
+    public void OnGameEvent(GameEvent_RespawnDeath e) {
+        RespawnSound();
+    }
+
+    public void OnGameEvent(GameEvent_Shoot e) {
+        shootSound();
+    }
+
+    public void OnGameEvent(GameEvent_Win e) {
+        levelCompleteSound();
     }
 
     //	Sound feedback methods -----------------------------------------------------------------------------
@@ -187,11 +218,8 @@ public class SoundManager : PersistentSingleton<SoundManager>,
     public AudioClip soundPause;
     public AudioClip soundUnPause;
     public AudioClip soundPlayerDeath;
+    public AudioClip soundEnemyDeath;
     public AudioClip soundRespawn;
-    public AudioClip soundStarPicked;
-    public AudioClip soundHitLevelBounds;
-    public AudioClip soundPlayerReachGoalFront;
-    public AudioClip soundPlayerReachGoalBehind;
     public AudioClip soundShoot;
 
 
@@ -207,4 +235,13 @@ public class SoundManager : PersistentSingleton<SoundManager>,
     void shootSound() {
         PlaySound(soundShoot, this.transform.position);
     }
+
+    void EnemyDeathSound() {
+        PlaySound(soundEnemyDeath, this.transform.position);
+    }
+
+    void RespawnSound() {
+        PlaySound(soundRespawn, this.transform.position);
+    }
+
 }

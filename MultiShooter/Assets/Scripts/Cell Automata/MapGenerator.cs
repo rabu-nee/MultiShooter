@@ -23,15 +23,15 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
 
     public Transform start, enemy, obstacle, waypoint;
 
-    //[HideInInspector]
+    [HideInInspector]
     public Transform[] startingPositions;
 
-    //[HideInInspector]
+    [HideInInspector]
     public Transform[] enemyStartPos;
 
-    //[HideInInspector]
+    [HideInInspector]
     public Transform[] obstacleStartPos;
-    //[HideInInspector]
+    [HideInInspector]
     public Transform[] waypointPos;
 
 

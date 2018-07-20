@@ -23,7 +23,7 @@ public class Bullet : MonoBehaviour {
             var hit = collision.gameObject;
             var health = hit.GetComponent<Health>();
             if (health != null) {
-                health.TakeDamage(damage);
+                health.TakeDamage(damage, projectileInstigator);
             }
             gameObject.SetActive(false);
         }
