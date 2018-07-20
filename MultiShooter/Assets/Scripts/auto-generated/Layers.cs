@@ -8,6 +8,8 @@ namespace C
 		public const int IGNORE_RAYCAST = 2;
 		public const int WATER = 4;
 		public const int UI = 5;
+		public const int PLAYER = 8;
+		public const int ENEMY = 9;
 
 
 		public static int onlyIncluding( params int[] layers )

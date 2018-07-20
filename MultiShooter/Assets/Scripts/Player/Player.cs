@@ -1,88 +1,60 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 using GameEvents;
 
-public class PlayerController : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>, IGameEventListener<GameEvent_RespawnDeath> {
-    #region Variables
-    [Header("Components")]
-    [SerializeField]
-    private Rigidbody rigidBody;
+public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>, IGameEventListener<GameEvent_RespawnDeath> {
+    public Transform bulletSpawn;
+    public Material playerMat;
+
+
     [SerializeField]
     private GameObject topdownCameraPrefab;
-    [SerializeField]
-    private BoxCollider boxCollider;
 
     [Header("Movement")]
     [SerializeField]
     private float moveSpeed = 5.0f;
-
-    [Header("Shooting")]
     [SerializeField]
-    private Transform projectileOrigin;
+    private Rigidbody rigidBody;
+
     [SerializeField]
     private float fireSpeed;
     private float nextFire;
-
-    public Health health;
+    public float bulletSpeed;
 
     [SerializeField]
     private float score;
 
-    public NetworkIdentity netId;
+    public Health health;
+
     public Transform[] startingPositions;
 
     private GameObject topDownCameraPivot;
     private Camera topDownCamera;
 
     private ObjectPooler objectPooler;
-    #endregion
-
 
     private void Start() {
         if (isLocalPlayer) {
             topDownCameraPivot = Instantiate(topdownCameraPrefab);
             topDownCamera = topDownCameraPivot.GetComponentInChildren<Camera>();
         }
-        
-        
+
+
         objectPooler = ObjectPooler.Instance;
     }
 
-    private void Update() {
-        if (isLocalPlayer) {
-            CheckForProjectile();
+    void Update() {
+        if (!isLocalPlayer) {
+            return;
         }
-    }
 
-    private void FixedUpdate() {
-        if (isLocalPlayer) {
-            Move();
-        }
-    }
+        Move();
 
-    void CheckForProjectile() {
         if (Input.GetButton("Fire1") && Time.time > nextFire) {
-            Vector3 direction = projectileOrigin.position - gameObject.transform.position;
-            CmdRequestProjectile(projectileOrigin.position, direction, gameObject);
+            CmdFire();
             nextFire = Time.time + fireSpeed;
         }
     }
-
-    [Command]
-    private void CmdRequestProjectile(Vector3 position, Vector3 direction, GameObject obj) {
-        RpcSpawnProjectile(position, direction);
-    }
-
-    [ClientRpc]
-    private void RpcSpawnProjectile(Vector3 position, Vector3 direction) {
-        GameObject bullet = objectPooler.SpawnFromPool("PlayerBullet", projectileOrigin.position, projectileOrigin.rotation);
-
-        SimpleProjectile newProjectile = bullet.GetComponent<SimpleProjectile>();
-        newProjectile.InitProjectile(position, direction, this);
-    }
-    
 
     private void Move() {
         Vector3 motion = Vector3.zero;
@@ -127,6 +99,27 @@ public class PlayerController : NetworkBehaviour, IGameEventListener<GameEvent_R
         topDownCameraPivot.transform.position = transform.position;
     }
 
+    // This [Command] code is called on the Client …
+    // … but it is run on the Server!
+    [Command]
+    void CmdFire() {
+        // Create the Bullet from the Bullet Prefab
+        var bullet = objectPooler.SpawnFromPool("PlayerBullet", bulletSpawn.position, bulletSpawn.rotation);
+
+        Bullet newProjectile = bullet.GetComponent<Bullet>();
+        newProjectile.InitProjectile(gameObject);
+
+        // Add velocity to the bullet
+        bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * bulletSpeed;
+
+        // Spawn the bullet on the Clients
+        NetworkServer.Spawn(bullet);
+    }
+
+    public override void OnStartLocalPlayer() {
+        GetComponent<MeshRenderer>().material = playerMat;
+    }
+
 
     [Command]
     void CmdRequestRespawn() {
@@ -148,9 +141,6 @@ public class PlayerController : NetworkBehaviour, IGameEventListener<GameEvent_R
             transform.position = spawnPoint;
         }
     }
-
-
-
     public void OnEnable() {
         this.EventStartListening<GameEvent_RespawnNow>();
         this.EventStartListening<GameEvent_RespawnDeath>();
@@ -165,7 +155,7 @@ public class PlayerController : NetworkBehaviour, IGameEventListener<GameEvent_R
     }
 
     public void OnGameEvent(GameEvent_RespawnDeath gameEvent) {
-        if(health.currentHealth <= 0) {
+        if (health.currentHealth <= 0) {
             score = -gameEvent.GetPenalty();
             CmdRequestRespawn();
         }

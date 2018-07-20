@@ -10,7 +10,7 @@ public class SimpleProjectile : MonoBehaviour {
     [SerializeField]
     private float speed;
     [SerializeField]
-    private PlayerController projectileInstigator;
+    private GameObject projectileInstigator;
     [SerializeField]
     private Collider instigatorCollider;
 
@@ -18,13 +18,13 @@ public class SimpleProjectile : MonoBehaviour {
 
     }
 
-    public void InitProjectile(Vector3 position, Vector3 direction, PlayerController instigator) {
+    public void InitProjectile(Vector3 position, Vector3 direction, GameObject instigator) {
 
         transform.position = position;
         projectileRigidBody.velocity = direction * speed;
         projectileInstigator = instigator;
 
-        instigatorCollider = instigator.GetComponentInChildren<Collider>();
+        instigatorCollider = instigator.GetComponent<Collider>();
     }
 
 
