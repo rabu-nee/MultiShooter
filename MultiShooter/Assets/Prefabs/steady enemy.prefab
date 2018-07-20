@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4779002069558754}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bullet spawn (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 208924431527493850}
   - component: {fileID: 114073863988973708}
   - component: {fileID: 114588628162508030}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: steady enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,7 +56,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4219841454631960}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bullet spawn (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4427827100068728}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bullet spawn (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4757611875557504}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bullet spawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -265,8 +265,8 @@ MonoBehaviour:
   - {fileID: 4779002069558754}
   - {fileID: 4219841454631960}
   - {fileID: 4427827100068728}
-  fireSpeed: 0.15
-  bulletSpeed: 25
+  fireSpeed: 0.25
+  bulletSpeed: 10
 --- !u!136 &136085020985057710
 CapsuleCollider:
   m_ObjectHideFlags: 1

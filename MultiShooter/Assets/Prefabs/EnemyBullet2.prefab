@@ -22,10 +22,11 @@ GameObject:
   - component: {fileID: 54878673976466992}
   - component: {fileID: 114420567287749154}
   - component: {fileID: 114581509476825248}
-  - component: {fileID: 114382635420707894}
   - component: {fileID: 33797350149467840}
   - component: {fileID: 23668788867963262}
-  m_Layer: 0
+  - component: {fileID: 114375083249608022}
+  - component: {fileID: 135438073327168324}
+  m_Layer: 9
   m_Name: EnemyBullet2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +103,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &114382635420707894
+--- !u!114 &114375083249608022
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -110,12 +111,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1169221506067772}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1065bcca21b2414882491060ed7effe, type: 3}
+  m_Script: {fileID: 11500000, guid: 2b7b857821961154a971b8d9aff01bca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileRigidBody: {fileID: 54878673976466992}
-  damageAmount: 0
-  speed: 6
+  damage: 1
   projectileInstigator: {fileID: 0}
   instigatorCollider: {fileID: 0}
 --- !u!114 &114420567287749154
@@ -171,3 +170,15 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
+--- !u!135 &135438073327168324
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1169221506067772}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.49999997
+  m_Center: {x: 0, y: 0, z: 0}

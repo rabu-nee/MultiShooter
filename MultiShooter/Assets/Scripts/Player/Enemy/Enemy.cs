@@ -12,14 +12,13 @@ public class Enemy : NetworkBehaviour {
 
     private ObjectPooler objectPooler;
 
-    private void Start() {
+    public void Start() {
         objectPooler = ObjectPooler.Instance;
     }
-
+    
     void Update() {
-        if (!isLocalPlayer) {
+        if (!isServer)
             return;
-        }
 
         if (Time.time > nextFire) {
             CmdFire();
@@ -27,16 +26,16 @@ public class Enemy : NetworkBehaviour {
         }
     }
 
-    // This [Command] code is called on the Client …
-    // … but it is run on the Server!
     [Command]
     void CmdFire() {
         foreach (Transform bulletSp in bulletSpawn) {
-            // Create the Bullet from the Bullet Prefab
             var bullet = objectPooler.SpawnFromPool("EnemyBullet1", bulletSp.position, bulletSp.rotation);
 
+            Bullet newProjectile = bullet.GetComponent<Bullet>();
+            newProjectile.InitProjectile(gameObject);
+            Vector3 direction = bulletSp.position - gameObject.transform.position;
             // Add velocity to the bullet
-            bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * bulletSpeed;
+            bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed;
 
             // Spawn the bullet on the Clients
             NetworkServer.Spawn(bullet);
