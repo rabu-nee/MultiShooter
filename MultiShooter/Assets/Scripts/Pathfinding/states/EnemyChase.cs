@@ -11,11 +11,9 @@ public class EnemyChase : IFSMState<EnemyController>{
     public void Enter(EnemyController e) {
         agent = e.GetComponent<NavMeshAgent>();
         agent.SetDestination(e.target.position);
-        Debug.Log("started chasing");
     }
 
     public void Exit(EnemyController e) {
-        Debug.Log("stopped chasing");
     }
 
     public void Reason(EnemyController e) {
@@ -42,7 +40,7 @@ public class EnemyChase : IFSMState<EnemyController>{
         if (notSeePlayerTime > 3.0) {
             e.target = null;
             e.ChangeState(EnemyPatrol.Instance);
-            e.enemyScript.enabled = false;
+            //e.enemyScript.enabled = false;
         }
     }
 
@@ -52,13 +50,8 @@ public class EnemyChase : IFSMState<EnemyController>{
         if (chasingTime > 0.5f) {
             agent.SetDestination(e.target.position);
             chasingTime = 0;
-            Debug.Log("Setting Target...");
-            e.enemyScript.enabled = true;
+            //e.enemyScript.enabled = true;
         }
 
-        // run after the player!
-        //var directionToPlayer = e.playerTransform.position - e.transform.position;
-        //e.transform.rotation = Quaternion.LookRotation( directionToPlayer );
-        //e.transform.position += ( directionToPlayer.normalized * speed * Time.deltaTime );
     }
 }

@@ -14,11 +14,9 @@ public class EnemyPatrol : IFSMState<EnemyController> {
     public void Enter(EnemyController e) {
         agent = e.GetComponent<NavMeshAgent>();
         agent.SetDestination(e.waypoints[currentWaypoint]);
-        Debug.Log("started patrolling");
     }
 
     public void Exit(EnemyController e) {
-        Debug.Log("stopped patrolling");
     }
 
     public void Reason(EnemyController e) {
@@ -47,8 +45,6 @@ public class EnemyPatrol : IFSMState<EnemyController> {
         // really simple waypoint navigation. Just finds a waypoint to run to
         if (agent.remainingDistance <= agent.stoppingDistance) {
             currentWaypoint = (currentWaypoint + 1) % e.waypoints.Count;
-
-            Debug.Log("Changed Waypoint to #" + currentWaypoint);
             agent.SetDestination(e.waypoints[currentWaypoint]);
         }
 

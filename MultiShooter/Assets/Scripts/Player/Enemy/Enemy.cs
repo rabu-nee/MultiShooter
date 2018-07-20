@@ -8,6 +8,8 @@ public class Enemy : NetworkBehaviour {
     private float fireSpeed;
     private float nextFire;
     public float bulletSpeed;
+    public int bulletType = 1;
+    public bool alternate;
 
 
     private ObjectPooler objectPooler;
@@ -37,7 +39,7 @@ public class Enemy : NetworkBehaviour {
     [ClientRpc]
     void RpcSpawnBullet() {
         foreach (Transform bulletSp in bulletSpawn) {
-            var bullet = objectPooler.SpawnFromPool("EnemyBullet1", bulletSp.position, bulletSp.rotation);
+            var bullet = objectPooler.SpawnFromPool("EnemyBullet" + bulletType, bulletSp.position, bulletSp.rotation);
 
             Bullet newProjectile = bullet.GetComponent<Bullet>();
             newProjectile.InitProjectile(gameObject);
@@ -45,6 +47,12 @@ public class Enemy : NetworkBehaviour {
             // Add velocity to the bullet
             bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed;
 
+            if (bulletType == 1 && alternate) {
+                bulletType = 2;
+            }
+            else if(bulletType == 2 && alternate) {
+                bulletType = 1;
+            }
 
         }
     }
