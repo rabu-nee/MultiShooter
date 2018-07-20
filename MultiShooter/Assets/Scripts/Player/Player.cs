@@ -99,8 +99,6 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
         topDownCameraPivot.transform.position = transform.position;
     }
 
-    // This [Command] code is called on the Client …
-    // … but it is run on the Server!
     [Command]
     void CmdFire() {
         // Create the Bullet from the Bullet Prefab

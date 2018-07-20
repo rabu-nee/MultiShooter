@@ -21,7 +21,7 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
 
     int[,] map;
 
-    public Transform start, enemy, obstacle;
+    public Transform start, enemy, obstacle, waypoint;
 
     //[HideInInspector]
     public Transform[] startingPositions;
@@ -31,6 +31,9 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
 
     //[HideInInspector]
     public Transform[] obstacleStartPos;
+    //[HideInInspector]
+    public Transform[] waypointPos;
+
 
     private ObjectPooler objectPooler;
 
@@ -40,6 +43,7 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
         startingPositions = start.GetComponentsInChildren<Transform>();
         enemyStartPos = enemy.GetComponentsInChildren<Transform>();
         obstacleStartPos = obstacle.GetComponentsInChildren<Transform>();
+        waypointPos = waypoint.GetComponentsInChildren<Transform>();
     }
 
     /*
@@ -74,6 +78,7 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
         RandomPos(startingPositions);
         RandomPos(enemyStartPos);
         RandomPos(obstacleStartPos);
+        RandomPos(waypointPos);
 
         int borderSize = 1;
         int[,] borderedMap = new int[width + borderSize * 2, height + borderSize * 2];

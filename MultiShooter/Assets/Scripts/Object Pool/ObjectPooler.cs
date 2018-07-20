@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class ObjectPooler : MonoBehaviour {
+public class ObjectPooler : NetworkBehaviour {
 
     [System.Serializable]
     public class Pool {
@@ -52,6 +52,7 @@ public class ObjectPooler : MonoBehaviour {
         objToSpawn.SetActive(true);
         objToSpawn.transform.position = position;
         objToSpawn.transform.rotation = rotation;
+
 
         IPooledObject pooledObject = objToSpawn.GetComponent<IPooledObject>();
         if (pooledObject != null) {

@@ -21,13 +21,14 @@ public class Enemy : NetworkBehaviour {
             return;
 
         if (Time.time > nextFire) {
-            CmdFire();
+            CmdRequestBullet();
             nextFire = Time.time + fireSpeed;
         }
     }
 
     [Command]
-    void CmdFire() {
+    void CmdRequestBullet() {
+
         foreach (Transform bulletSp in bulletSpawn) {
             var bullet = objectPooler.SpawnFromPool("EnemyBullet1", bulletSp.position, bulletSp.rotation);
 
@@ -40,5 +41,12 @@ public class Enemy : NetworkBehaviour {
             // Spawn the bullet on the Clients
             NetworkServer.Spawn(bullet);
         }
+
+        //RpcSpawnBullet();
+    }
+
+    [ClientRpc]
+    void RpcSpawnBullet() {
+
     }
 }
