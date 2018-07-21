@@ -229,8 +229,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyOnDeath: 1
+  obstacle: 0
   addScore: 1000
-  currentHealth: 5
+  latestDamageGiver: {fileID: 0}
+  currentHealth: 3
+  healthBar: {fileID: 0}
 --- !u!195 &195065279944628030
 NavMeshAgent:
   m_ObjectHideFlags: 1

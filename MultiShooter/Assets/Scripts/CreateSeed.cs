@@ -5,12 +5,15 @@ using UnityEngine.Networking;
 using GameEvents;
 using UnityEngine.UI;
 
-public class CreateSeed : NetworkBehaviour, IGameEventListener<GameEvent_ScoreUpdate> {
+public class CreateSeed : NetworkBehaviour, IGameEventListener<GameEvent_Spawn>, IGameEventListener<GameEvent_EnemyKill>{
 
     public string seed;
     public GameObject buttonObj;
+    public GameObject exitbutton;
+    public GameObject EndGametext;
     public MapGenerator mapGen;
-    public Text[] scoreTexts;
+    public int enemyNumber;
+    public int remainingEnemies;
 
 
     private void Start() {
@@ -48,25 +51,48 @@ public class CreateSeed : NetworkBehaviour, IGameEventListener<GameEvent_ScoreUp
         buttonObj.SetActive(false);
     }
 
-    public void OnEnable() {
-        this.EventStartListening<GameEvent_ScoreUpdate>();
 
+    public void OnEnable() {
+        this.EventStartListening<GameEvent_Spawn>();
+        this.EventStartListening<GameEvent_EnemyKill>();
     }
     public void OnDisable() {
-        this.EventStartListening<GameEvent_ScoreUpdate>();
+        this.EventStopListening<GameEvent_Spawn>();
+        this.EventStopListening<GameEvent_EnemyKill>();
+    }
+    public void OnGameEvent(GameEvent_Spawn gameEvent) {
+        enemyNumber = gameEvent.GetEnemyNumber();
+        remainingEnemies = enemyNumber;
     }
 
+    public void OnGameEvent(GameEvent_EnemyKill gameEvent) {
+            CmdCheckWin();
+        Debug.Log("A");
+    }
 
-    public void OnGameEvent(GameEvent_ScoreUpdate gameEvent) {
-        float score = gameEvent.GetScore();
-        int index = gameEvent.GetIndex();
-
-        RpcUpdateScore(index, score);
+    [Command]
+    void CmdCheckWin() {
+        RpcCheckWin();
     }
 
     [ClientRpc]
-    void RpcUpdateScore( int index,float score) {
+    void RpcCheckWin() {
+        Debug.Log("B");
+        remainingEnemies--;
+        if (remainingEnemies == 0) {
 
-        scoreTexts[index].text = "Player " +index + ": " + score;
+            GameEventManager.TriggerEvent(new GameEvent_Win());
+            exitbutton.SetActive(true);
+            EndGametext.SetActive(true);
+        }
+    }
+
+    public void exitButton() {
+        if (!isServer) {
+            NetworkManager.singleton.StopClient();
+        }
+        else {
+            NetworkManager.singleton.StopHost();
+        }
     }
 }

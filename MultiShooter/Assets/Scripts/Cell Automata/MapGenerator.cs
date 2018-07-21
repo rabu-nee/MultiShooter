@@ -75,11 +75,6 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
 
         ProcessMap();
 
-        RandomPos(startingPositions);
-        RandomPos(enemyStartPos);
-        RandomPos(obstacleStartPos);
-        RandomPos(waypointPos);
-
         int borderSize = 1;
         int[,] borderedMap = new int[width + borderSize * 2, height + borderSize * 2];
 
@@ -93,6 +88,11 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
                 }
             }
         }
+
+        RandomPos(startingPositions, 0);
+        RandomPos(enemyStartPos, -1.5f);
+        RandomPos(obstacleStartPos, -1.5f);
+        RandomPos(waypointPos, -1.5f);
 
         MeshGenerator meshGen = this.gameObject.GetComponent<MeshGenerator>();
         meshGen.GenerateMesh(borderedMap, 1);
@@ -453,7 +453,7 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
         }
     }
 
-    public void RandomPos(Transform[] positions) {
+    public void RandomPos(Transform[] positions, float y) {
         //placing starting positions
         List<List<Coord>> roomRegions = GetRegions(0);
 
@@ -465,7 +465,7 @@ public class MapGenerator : NetworkBehaviour, IGameEventListener<GameEvent_SendS
 
             Vector3 spawn = CoordToWorldPoint(regions[ra]);
 
-            spawn.y = -1.5f;
+            spawn.y = y;
 
             pos.position = spawn;
         }

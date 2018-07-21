@@ -143,8 +143,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyOnDeath: 1
+  obstacle: 1
   addScore: 100
+  latestDamageGiver: {fileID: 0}
   currentHealth: 5
+  healthBar: {fileID: 0}
 --- !u!208 &208050628753414792
 NavMeshObstacle:
   m_ObjectHideFlags: 1

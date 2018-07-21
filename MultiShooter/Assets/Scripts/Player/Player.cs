@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using GameEvents;
+using UnityEngine.UI;
+using Cinemachine;
 
-public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>, IGameEventListener<GameEvent_RespawnDeath>, IGameEventListener<GameEvent_EnemyKill> {
+public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>, IGameEventListener<GameEvent_RespawnDeath>,
+    IGameEventListener<GameEvent_EnemyKill>, IGameEventListener<GameEvent_Win>, IGameEventListener<GameEvent_PlayerKill> {
     public Transform bulletSpawn;
     public Material playerMat;
-
-
-    [SerializeField]
-    private GameObject topdownCameraPrefab;
 
     [Header("Movement")]
     [SerializeField]
@@ -21,28 +20,30 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
     private float nextFire;
     public float bulletSpeed;
 
-    public NetworkIdentity netIdentity;
-    public int index;
-
-    [SyncVar]
+    [SyncVar(hook = "OnChangeScore")]
     private float score;
+    public RectTransform scoreTransform;
+    public Text scoreText;
 
     public Health health;
 
     public Transform[] startingPositions;
-
-    private GameObject topDownCameraPivot;
-    private Camera topDownCamera;
-
+ 
     private ObjectPooler objectPooler;
+
+    public bool canMove;
+
+    public GameObject cameraPrefab;
+    public CinemachineVirtualCamera cam;
+
 
     private void Start() {
         if (isLocalPlayer) {
-            topDownCameraPivot = Instantiate(topdownCameraPrefab);
-            topDownCamera = topDownCameraPivot.GetComponentInChildren<Camera>();
+            GameObject camera = Instantiate(cameraPrefab);
+            cam = camera.GetComponentInChildren<CinemachineVirtualCamera>();
+            cam.Follow = gameObject.transform;
+            cam.LookAt = gameObject.transform;
         }
-
-        index = int.Parse(netId.ToString());
 
         objectPooler = ObjectPooler.Instance;
     }
@@ -52,15 +53,18 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
             return;
         }
 
-        Move();
+        if (canMove) {
+            Move();
 
-        if (Input.GetButton("Fire1") && Time.time > nextFire) {
-            CmdFire();
-            GameEventManager.TriggerEvent(new GameEvent_Shoot());
-            nextFire = Time.time + fireSpeed;
+            if ((Input.GetButton("Fire1") || Input.GetAxis("Triggers") == 1 || Input.GetAxis("Triggers") == -1) && Time.time > nextFire) {
+                CmdFire();
+                GameEventManager.TriggerEvent(new GameEvent_Shoot());
+                nextFire = Time.time + fireSpeed;
+            }
         }
     }
 
+    /*
     private void Move() {
         Vector3 motion = Vector3.zero;
         bool bMoving = false;
@@ -104,6 +108,24 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
         topDownCameraPivot.transform.position = transform.position;
     }
 
+    */
+
+    private void Move() {
+        float horizontalMove = Input.GetAxis("LeftHorizontal") * moveSpeed;
+        float verticalMove = Input.GetAxis("LeftVertical") * moveSpeed;
+
+        rigidBody.velocity = new Vector3(horizontalMove, rigidBody.velocity.y, verticalMove);
+
+
+        float rx = Input.GetAxis("RightHorizontal");
+        float ry = Input.GetAxis("RightVertical");
+
+        float angle = Mathf.Atan2(rx, ry);
+
+        transform.rotation = Quaternion.EulerAngles(0, angle, 0);
+
+    }
+
     [Command]
     void CmdFire() {
         RpcSpawnBullet();
@@ -123,11 +145,6 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
 
     }
 
-    public override void OnStartLocalPlayer() {
-        GetComponent<MeshRenderer>().material = playerMat;
-    }
-
-
     [Command]
     void CmdRequestRespawn() {
         RpcRespawn();
@@ -146,20 +163,26 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
 
             // Set the player’s position to the chosen spawn point
             transform.position = spawnPoint;
+            canMove = true;
         }
     }
     public void OnEnable() {
         this.EventStartListening<GameEvent_RespawnNow>();
         this.EventStartListening<GameEvent_RespawnDeath>();
         this.EventStartListening<GameEvent_EnemyKill>();
+        this.EventStartListening<GameEvent_PlayerKill>();        
+        this.EventStartListening<GameEvent_Win>();        
     }
     public void OnDisable() {
         this.EventStopListening<GameEvent_RespawnNow>();
         this.EventStopListening<GameEvent_RespawnDeath>();
         this.EventStopListening<GameEvent_EnemyKill>();
+        this.EventStopListening<GameEvent_PlayerKill>();
+        this.EventStopListening<GameEvent_Win>();
     }
     public void OnGameEvent(GameEvent_RespawnNow gameEvent) {
         startingPositions = gameEvent.GetStartPos();
+        score = 0;
         CmdRequestRespawn();
     }
 
@@ -169,7 +192,6 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
 
             if(!GameObject.ReferenceEquals(killer, gameObject)) {
                 score -= gameEvent.GetPenalty();
-                GameEventManager.TriggerEvent(new GameEvent_ScoreUpdate(score, index));
             }
 
             CmdRequestRespawn();
@@ -181,7 +203,38 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
 
         if(GameObject.ReferenceEquals(enemyKiller,gameObject)) {
             score += gameEvent.GetScoreAdd();
-            GameEventManager.TriggerEvent(new GameEvent_ScoreUpdate(score, index));
         }
+    }
+
+    public void OnGameEvent(GameEvent_PlayerKill gameEvent) {
+        GameObject playerKiller = gameEvent.GetInstigator();
+
+        if (GameObject.ReferenceEquals(playerKiller, gameObject)) {
+            score += gameEvent.GetScoreAdd();
+        }
+    }
+
+    public void OnGameEvent(GameEvent_Win gameEvent) {
+        CmdDisableMove(false);
+    }
+
+    [Command]
+    void CmdDisableMove(bool state) {
+        RpcDisableMove(state);
+    }
+
+    [ClientRpc]
+    void RpcDisableMove(bool state) {
+        canMove = state;
+    }
+
+    void OnChangeScore(float score) {
+        scoreText.text = "" + score;
+    }
+
+    public override void OnStartLocalPlayer() {
+        GetComponent<MeshRenderer>().material = playerMat;
+
+        //scoreTransform.position = new Vector2(scoreTransform.position.x, scoreTransform.position.y);
     }
 }

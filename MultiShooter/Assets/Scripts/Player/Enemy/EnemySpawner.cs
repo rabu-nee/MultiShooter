@@ -14,9 +14,6 @@ public class EnemySpawner : NetworkBehaviour, IGameEventListener<GameEvent_Respa
     public override void OnStartServer() {
         objectPooler = ObjectPooler.Instance;
 
-        numberOfEnemies = Random.Range(10,30);
-        numberOfObstacles = Random.Range(20,40);
-
     }
 
     public void OnEnable() {
@@ -28,14 +25,17 @@ public class EnemySpawner : NetworkBehaviour, IGameEventListener<GameEvent_Respa
     public void OnGameEvent(GameEvent_RespawnNow gameEvent) {
         startingPositions = gameEvent.GetEnemyPos();
 
+        numberOfEnemies = Random.Range(8, 15);
+        numberOfObstacles = Random.Range(15, 30);
+
+        GameEventManager.TriggerEvent(new GameEvent_Spawn(numberOfEnemies));
+
         for (int i = 0; i < numberOfEnemies; i++) {
             var spawnPosition = startingPositions[Random.Range(0, startingPositions.Length)].position;
 
             var spawnRotation = Quaternion.Euler(0.0f, Random.Range(0, 180), 0.0f);
 
             int r = Random.Range(1, 4);
-            int r1 = Random.Range(1, 3);
-            int r2 = Random.Range(0, 2);
 
             var enemy = objectPooler.SpawnFromPool("Enemy" + r, spawnPosition, spawnRotation);
 

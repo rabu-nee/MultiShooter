@@ -40,11 +40,13 @@ public class Enemy : NetworkBehaviour {
         foreach (Transform bulletSp in bulletSpawn) {
             var bullet = objectPooler.SpawnFromPool("EnemyBullet" + bulletType, bulletSp.position, bulletSp.rotation);
 
-            Bullet newProjectile = bullet.GetComponent<Bullet>();
-            newProjectile.InitProjectile(gameObject);
-            Vector3 direction = bulletSp.position - gameObject.transform.position;
-            // Add velocity to the bullet
-            bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed;
+            if (bullet != null) {
+                Bullet newProjectile = bullet.GetComponent<Bullet>();
+                newProjectile.InitProjectile(gameObject);
+                Vector3 direction = bulletSp.position - gameObject.transform.position;
+                // Add velocity to the bullet
+                bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed;
+            }
 
             if (bulletType == 1 && alternate) {
                 bulletType = 2;

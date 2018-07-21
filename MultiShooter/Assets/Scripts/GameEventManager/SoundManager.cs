@@ -13,6 +13,7 @@ public class SoundSettings {
 public class SoundManager : PersistentSingleton<SoundManager>,
   IGameEventListener<GameEvent_Engine>,
     IGameEventListener<GameEvent_EnemyKill>,
+    IGameEventListener<GameEvent_PlayerKill>,
     IGameEventListener<GameEvent_RespawnDeath>,
     IGameEventListener<GameEvent_Shoot>,
     IGameEventListener<GameEvent_Win>{
@@ -178,6 +179,7 @@ public class SoundManager : PersistentSingleton<SoundManager>,
     protected virtual void OnEnable() {
         this.EventStartListening<GameEvent_Engine>();
         this.EventStartListening<GameEvent_EnemyKill>();
+        this.EventStartListening<GameEvent_PlayerKill>();
         this.EventStartListening<GameEvent_RespawnDeath>();
         this.EventStartListening<GameEvent_Shoot>();
         this.EventStartListening<GameEvent_Win>();
@@ -188,6 +190,7 @@ public class SoundManager : PersistentSingleton<SoundManager>,
         if (_enabled) {
             this.EventStopListening<GameEvent_Engine>();
             this.EventStopListening<GameEvent_EnemyKill>();
+            this.EventStopListening<GameEvent_PlayerKill>();
             this.EventStopListening<GameEvent_RespawnDeath>();
             this.EventStopListening<GameEvent_Shoot>();
             this.EventStopListening<GameEvent_Win>();
@@ -195,6 +198,10 @@ public class SoundManager : PersistentSingleton<SoundManager>,
     }
 
     public void OnGameEvent(GameEvent_EnemyKill e) {
+        EnemyDeathSound();
+    }
+
+    public void OnGameEvent(GameEvent_PlayerKill e) {
         EnemyDeathSound();
     }
 

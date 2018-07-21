@@ -4,6 +4,7 @@ using UnityEngine.Analytics;
 using UnityEngine.Experimental.UIElements;
 
 
+
 namespace GameEvents {
     /// <summary>
     ///	base class for a game action / statechange / user input
@@ -155,33 +156,47 @@ namespace GameEvents {
         }
     }
 
+    public class GameEvent_PlayerKill : GameEvent {
+        public float scoreAdd;
+        public GameObject instigator;
+
+        public GameEvent_PlayerKill(float newScoreAdd, GameObject newInstigator) {
+            scoreAdd = newScoreAdd;
+            instigator = newInstigator;
+        }
+
+        public float GetScoreAdd() {
+            return scoreAdd;
+        }
+
+        public GameObject GetInstigator() {
+            return instigator;
+        }
+    }
+
     public class GameEvent_Shoot : GameEvent {
         public GameEvent_Shoot() {
             
         }
     }
 
+    public class GameEvent_Spawn : GameEvent {
+        public int enemyNumber;
+
+        public GameEvent_Spawn(int newEnemyNumber) {
+            enemyNumber = newEnemyNumber;
+        }
+
+        public int GetEnemyNumber() {
+            return enemyNumber;
+        }
+    }
+
     public class GameEvent_Win : GameEvent {
+
         public GameEvent_Win() {
 
         }
     }
 
-    public class GameEvent_ScoreUpdate : GameEvent {
-        public float score;
-        public int index;
-
-        public GameEvent_ScoreUpdate(float newScore, int newIndex) {
-            score = newScore;
-            index = newIndex;
-        }
-
-        public float GetScore() {
-            return score;
-        }
-
-        public int GetIndex() {
-            return index;
-        }
-    }
 }
