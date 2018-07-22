@@ -67,7 +67,6 @@ public class CreateSeed : NetworkBehaviour, IGameEventListener<GameEvent_Spawn>,
 
     public void OnGameEvent(GameEvent_EnemyKill gameEvent) {
             CmdCheckWin();
-        Debug.Log("A");
     }
 
     [Command]
@@ -77,7 +76,6 @@ public class CreateSeed : NetworkBehaviour, IGameEventListener<GameEvent_Spawn>,
 
     [ClientRpc]
     void RpcCheckWin() {
-        Debug.Log("B");
         remainingEnemies--;
         if (remainingEnemies == 0) {
 

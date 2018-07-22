@@ -317,9 +317,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletSpawn: {fileID: 4328124724764678}
   playerMat: {fileID: 2100000, guid: 04c70c9ba32fae3408502bfa83634420, type: 2}
-  moveSpeed: 5
+  moveSpeed: 7
   rigidBody: {fileID: 54440877113642374}
-  fireSpeed: 0.15
+  fireSpeed: 0.08
   bulletSpeed: 25
   scoreTransform: {fileID: 224445410166273376}
   scoreText: {fileID: 114919069475733758}

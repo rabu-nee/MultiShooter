@@ -111,18 +111,24 @@ public class Player : NetworkBehaviour, IGameEventListener<GameEvent_RespawnNow>
     */
 
     private void Move() {
-        float horizontalMove = Input.GetAxis("LeftHorizontal") * moveSpeed;
-        float verticalMove = Input.GetAxis("LeftVertical") * moveSpeed;
+        float horizontalMove = Input.GetAxis("LeftHorizontal");
+        float verticalMove = Input.GetAxis("LeftVertical");
 
-        rigidBody.velocity = new Vector3(horizontalMove, rigidBody.velocity.y, verticalMove);
+        rigidBody.velocity = new Vector3(horizontalMove * moveSpeed, rigidBody.velocity.y, verticalMove * moveSpeed);
 
+        if (Input.GetAxis("RightHorizontal") != 0 || Input.GetAxis("RightVertical") != 0) {
+            float rx = Input.GetAxis("RightHorizontal");
+            float ry = Input.GetAxis("RightVertical");
 
-        float rx = Input.GetAxis("RightHorizontal");
-        float ry = Input.GetAxis("RightVertical");
+            float angle = Mathf.Atan2(rx, ry);
 
-        float angle = Mathf.Atan2(rx, ry);
+            transform.rotation = Quaternion.EulerAngles(0, angle, 0);
+        }
+        else {
 
-        transform.rotation = Quaternion.EulerAngles(0, angle, 0);
+            float angle1 = Mathf.Atan2(horizontalMove, verticalMove);
+            transform.rotation = Quaternion.EulerAngles(0, angle1, 0);
+        }
 
     }
 
