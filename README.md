@@ -13,8 +13,8 @@ rotate - arrow keys
 
 Controls (twin stick):
 shoot - Triggers (mapped for XBox360 - if the mapping does not work for your controller, go to the Input settings and change the Input for "Fire1" accordingly
-move - right stick
-rotate - left stick
+move - left stick
+rotate - right stick
 
 
 How to play:
